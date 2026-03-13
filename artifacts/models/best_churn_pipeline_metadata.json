@@ -1,0 +1,87 @@
+{
+  "model_name": "XGBoost",
+  "feature_columns": [
+    "call_failure",
+    "complains",
+    "subscription_length",
+    "charge_amount",
+    "seconds_of_use",
+    "frequency_of_use",
+    "frequency_of_sms",
+    "distinct_called_numbers",
+    "age_group",
+    "tariff_plan",
+    "status",
+    "age",
+    "customer_value",
+    "avg_seconds_per_call",
+    "sms_per_call",
+    "calls_per_contact",
+    "contact_diversity_ratio",
+    "call_failure_rate",
+    "usage_per_month",
+    "calls_per_month",
+    "sms_per_month",
+    "value_per_month",
+    "value_per_call",
+    "complaint_status_interaction",
+    "charge_value_gap",
+    "tenure_age_ratio",
+    "usage_value_efficiency"
+  ],
+  "target_column": "churn",
+  "threshold": 0.5,
+  "holdout_metrics": {
+    "model": "XGBoost",
+    "test_accuracy": 0.9666666666666667,
+    "test_balanced_accuracy": 0.9436216683407694,
+    "test_precision": 0.8804347826086957,
+    "test_recall": 0.9101123595505618,
+    "test_f1": 0.8950276243093923,
+    "test_roc_auc": 0.9874909481651055,
+    "test_average_precision": 0.9444338916341
+  },
+  "best_threshold_on_train_f1": 0.7691,
+  "top_features": [
+    {
+      "feature": "complains",
+      "importance": 0.0306
+    },
+    {
+      "feature": "call_failure_rate",
+      "importance": 0.0143
+    },
+    {
+      "feature": "status",
+      "importance": 0.013
+    },
+    {
+      "feature": "tenure_age_ratio",
+      "importance": 0.0112
+    },
+    {
+      "feature": "seconds_of_use",
+      "importance": 0.0109
+    },
+    {
+      "feature": "subscription_length",
+      "importance": 0.009
+    },
+    {
+      "feature": "frequency_of_use",
+      "importance": 0.0079
+    },
+    {
+      "feature": "avg_seconds_per_call",
+      "importance": 0.0064
+    },
+    {
+      "feature": "calls_per_month",
+      "importance": 0.0059
+    },
+    {
+      "feature": "value_per_call",
+      "importance": 0.0024
+    }
+  ]
+}
