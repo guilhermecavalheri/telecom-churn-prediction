@@ -67,7 +67,7 @@ FEATURE_NOTES = {
 
 def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     data = df.copy()
-    eps = 1.0
+    eps = 1e-6
 
     # Ratios expose behavior more clearly than raw totals for churn.
     data["avg_seconds_per_call"] = data["seconds_of_use"] / (data["frequency_of_use"] + eps)

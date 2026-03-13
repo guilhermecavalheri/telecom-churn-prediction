@@ -33,55 +33,55 @@
   "threshold": 0.5,
   "holdout_metrics": {
     "model": "XGBoost",
-    "test_accuracy": 0.9666666666666667,
-    "test_balanced_accuracy": 0.9436216683407694,
-    "test_precision": 0.8804347826086957,
-    "test_recall": 0.9101123595505618,
-    "test_f1": 0.8950276243093923,
-    "test_roc_auc": 0.9874909481651055,
-    "test_average_precision": 0.9444338916341
+    "test_accuracy": 0.9596491228070175,
+    "test_balanced_accuracy": 0.9303067112055876,
+    "test_precision": 0.8586956521739131,
+    "test_recall": 0.8876404494382022,
+    "test_f1": 0.8729281767955801,
+    "test_roc_auc": 0.9880515779392184,
+    "test_average_precision": 0.9449914096426015
   },
-  "best_threshold_on_train_f1": 0.7691,
+  "best_threshold_on_train_f1": 0.7531,
   "top_features": [
     {
       "feature": "complains",
-      "importance": 0.0306
-    },
-    {
-      "feature": "call_failure_rate",
-      "importance": 0.0143
+      "importance": 0.0228
     },
     {
       "feature": "status",
-      "importance": 0.013
+      "importance": 0.0134
+    },
+    {
+      "feature": "call_failure_rate",
+      "importance": 0.0133
     },
     {
       "feature": "tenure_age_ratio",
-      "importance": 0.0112
-    },
-    {
-      "feature": "seconds_of_use",
       "importance": 0.0109
     },
     {
+      "feature": "seconds_of_use",
+      "importance": 0.0101
+    },
+    {
       "feature": "subscription_length",
-      "importance": 0.009
+      "importance": 0.0084
     },
     {
       "feature": "frequency_of_use",
-      "importance": 0.0079
+      "importance": 0.0082
     },
     {
       "feature": "avg_seconds_per_call",
-      "importance": 0.0064
+      "importance": 0.008
     },
     {
       "feature": "calls_per_month",
-      "importance": 0.0059
+      "importance": 0.0042
     },
     {
-      "feature": "value_per_call",
-      "importance": 0.0024
+      "feature": "usage_per_month",
+      "importance": 0.0026
     }
   ]
 }

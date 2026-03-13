@@ -5,60 +5,60 @@
   "best_model": "XGBoost",
   "best_model_holdout_metrics": {
     "model": "XGBoost",
-    "test_accuracy": 0.9667,
-    "test_balanced_accuracy": 0.9436,
-    "test_precision": 0.8804,
-    "test_recall": 0.9101,
-    "test_f1": 0.895,
-    "test_roc_auc": 0.9875,
-    "test_average_precision": 0.9444
+    "test_accuracy": 0.9596,
+    "test_balanced_accuracy": 0.9303,
+    "test_precision": 0.8587,
+    "test_recall": 0.8876,
+    "test_f1": 0.8729,
+    "test_roc_auc": 0.9881,
+    "test_average_precision": 0.945
   },
-  "best_threshold_on_train_f1": 0.7691,
+  "best_threshold_on_train_f1": 0.7531,
   "feature_engineering_gain_vs_raw_xgboost": {
-    "roc_auc_delta": 0.0044,
-    "average_precision_delta": 0.018,
-    "f1_delta": 0.0434
+    "roc_auc_delta": 0.0042,
+    "average_precision_delta": 0.0172,
+    "f1_delta": 0.0384
   },
   "top_features": [
     {
       "feature": "complains",
-      "importance": 0.0306
-    },
-    {
-      "feature": "call_failure_rate",
-      "importance": 0.0143
+      "importance": 0.0228
     },
     {
       "feature": "status",
-      "importance": 0.013
+      "importance": 0.0134
+    },
+    {
+      "feature": "call_failure_rate",
+      "importance": 0.0133
     },
     {
       "feature": "tenure_age_ratio",
-      "importance": 0.0112
-    },
-    {
-      "feature": "seconds_of_use",
       "importance": 0.0109
     },
     {
+      "feature": "seconds_of_use",
+      "importance": 0.0101
+    },
+    {
       "feature": "subscription_length",
-      "importance": 0.009
+      "importance": 0.0084
     },
     {
       "feature": "frequency_of_use",
-      "importance": 0.0079
+      "importance": 0.0082
     },
     {
       "feature": "avg_seconds_per_call",
-      "importance": 0.0064
+      "importance": 0.008
     },
     {
       "feature": "calls_per_month",
-      "importance": 0.0059
+      "importance": 0.0042
     },
     {
-      "feature": "value_per_call",
-      "importance": 0.0024
+      "feature": "usage_per_month",
+      "importance": 0.0026
     }
   ],
   "feature_notes": {
