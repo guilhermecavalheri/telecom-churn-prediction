@@ -106,7 +106,7 @@ flowchart TD
 ### `api/app.py`
 
 - expoe o modelo por HTTP
-- oferece endpoints de health, metadata e predicao
+- oferece endpoints de liveness, readiness, metadata e predicao
 - registra o uso operacional no banco local
 
 ## Fases de implementacao

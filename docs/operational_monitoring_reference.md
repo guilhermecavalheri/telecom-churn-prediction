@@ -61,12 +61,28 @@ O fluxo operacional atual esta separado em quatro responsabilidades:
 Os dados podem chegar por dois caminhos principais:
 
 - `api/app.py`
+  - via endpoint `/health` para liveness
+  - via endpoint `/ready` para readiness operacional
   - via endpoint `/predict`
   - via endpoint `/predict/batch`
 - `src/drift_demo.py`
   - para simulacao operacional com dados sinteticos
 
 Em ambos os casos, o fluxo de inferencia converge para `src/modules/predict.py`.
+
+### Diferenca entre `health` e `ready`
+
+O endpoint `GET /health` responde apenas se o servico esta vivo. Ele funciona como uma verificacao simples de liveness.
+
+O endpoint `GET /ready` responde se o servico esta realmente pronto para operar. Na implementacao atual, ele verifica:
+
+- se o bundle do modelo foi carregado
+- se a metadata do modelo foi carregada
+- qual versao do modelo esta ativa
+- se o banco local pode ser acessado
+- se as tabelas operacionais esperadas existem
+
+Essa separacao e importante porque uma API pode estar no ar, mas ainda assim nao estar pronta para servir previsoes com seguranca.
 
 ### Validacao da entrada
 

@@ -12,6 +12,22 @@ def test_health_endpoint_returns_ok(tmp_path) -> None:
 
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
+    assert response.json()["service"] == "alive"
+
+
+def test_ready_endpoint_returns_operational_state(tmp_path) -> None:
+    client = TestClient(create_app(db_path=tmp_path / "ops.duckdb"))
+
+    response = client.get("/ready")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "ready"
+    assert body["checks"]["model_bundle_loaded"] is True
+    assert body["checks"]["model_metadata_loaded"] is True
+    assert body["checks"]["database_accessible"] is True
+    assert body["checks"]["required_tables_available"] is True
+    assert "prediction_logs" in body["checks"]["existing_tables"]
 
 
 def test_predict_endpoint_returns_prediction(tmp_path, raw_input_df) -> None:

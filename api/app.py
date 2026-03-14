@@ -16,9 +16,17 @@ from src.modules.model_io import (
     load_model_bundle,
     load_model_metadata,
 )
-from src.modules.ops_store import OPS_DB_PATH, initialize_ops_store, log_predictions
+from src.modules.ops_store import OPS_DB_PATH, get_connection, initialize_ops_store, log_predictions
 from src.modules.predict import RAW_INPUT_COLUMNS, predict_dataframe
 from src.modules.schema import SchemaValidationError
+
+REQUIRED_OPS_TABLES = {
+    "model_registry",
+    "prediction_logs",
+    "prediction_inputs_sample",
+    "monitoring_snapshots",
+    "drift_alerts",
+}
 
 
 class TelecomFeatures(BaseModel):
@@ -44,6 +52,24 @@ class BatchPredictionRequest(BaseModel):
     source: str = "api_batch"
 
 
+def _check_database_readiness(db_path: Path) -> dict[str, Any]:
+    connection = get_connection(db_path)
+    try:
+        tables_df = connection.execute("SHOW TABLES").fetchdf()
+        existing_tables = set(tables_df["name"].tolist())
+    finally:
+        connection.close()
+
+    missing_tables = sorted(REQUIRED_OPS_TABLES - existing_tables)
+    return {
+        "database_accessible": True,
+        "database_path": str(db_path),
+        "existing_tables": sorted(existing_tables),
+        "missing_tables": missing_tables,
+        "required_tables_available": not missing_tables,
+    }
+
+
 def create_app(
     *,
     bundle_path: Path | None = None,
@@ -62,8 +88,32 @@ def create_app(
     def health() -> dict[str, Any]:
         return {
             "status": "ok",
-            "model_loaded": app.state.model_bundle is not None,
-            "expected_input_columns": RAW_INPUT_COLUMNS,
+            "service": "alive",
+        }
+
+    @app.get("/ready")
+    def ready() -> dict[str, Any]:
+        model_loaded = app.state.model_bundle is not None
+        metadata_loaded = app.state.model_metadata is not None
+        db_checks = _check_database_readiness(app.state.db_path)
+
+        ready_status = (
+            model_loaded
+            and metadata_loaded
+            and db_checks["database_accessible"]
+            and db_checks["required_tables_available"]
+        )
+
+        return {
+            "status": "ready" if ready_status else "not_ready",
+            "checks": {
+                "model_bundle_loaded": model_loaded,
+                "model_metadata_loaded": metadata_loaded,
+                "model_version": app.state.model_metadata.get("model_version"),
+                "threshold": app.state.model_metadata.get("threshold"),
+                "expected_input_columns": RAW_INPUT_COLUMNS,
+                **db_checks,
+            },
         }
 
     @app.get("/model/info")
