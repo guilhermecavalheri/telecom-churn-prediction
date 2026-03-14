@@ -6,7 +6,7 @@ Projeto de Machine Learning para previsao de churn de clientes de telecomunicaco
 
 O problema de negocio resolvido por este projeto e a identificacao antecipada de clientes com maior risco de churn, permitindo priorizar acoes de retencao com base em comportamento de uso, friccao operacional e sinais de relacionamento. O caso foi estruturado sobre uma base de telecom coletada ao longo de 12 meses, com evolucao desde a analise exploratoria ate a operacao basica do modelo.
 
-O modelo escolhido foi o `XGBoost`, que apresentou o melhor equilibrio geral no benchmark. No conjunto de teste final (`holdout`), ele entregou aproximadamente `ROC AUC = 0.9875`, `Average Precision = 0.9444`, `Recall = 0.9101`, `Precision = 0.8804` e `F1 = 0.8950`, alem de ganho real com o feature engineering em relacao ao conjunto bruto.
+O modelo escolhido foi o `XGBoost`, que apresentou o melhor equilibrio geral no benchmark. No conjunto de teste final (`holdout`), ele entregou aproximadamente `ROC AUC = 0.9881`, `Average Precision = 0.9450`, `Recall = 0.8876`, `Precision = 0.8587` e `F1 = 0.8729`, alem de ganho real com o feature engineering em relacao ao conjunto bruto.
 
 O projeto e relevante como exemplo de ML end-to-end porque nao para na modelagem: ele inclui persistencia do pipeline vencedor, inferencia reutilizavel, API de scoring, banco local para logs operacionais, simulacao de drift, monitoramento com alertas e documentacao de arquitetura. Isso o torna um caso de portfolio mais proximo de um fluxo real de MLOps do que de um notebook isolado.
 
