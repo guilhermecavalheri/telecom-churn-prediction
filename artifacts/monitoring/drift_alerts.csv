@@ -1,0 +1,5 @@
+feature_name,psi,severity,message
+call_failure,0.6703300856293961,high,Feature call_failure shows high drift with PSI=0.6703.
+subscription_length,0.6146118377767132,high,Feature subscription_length shows high drift with PSI=0.6146.
+frequency_of_use,0.19129212176529686,moderate,Feature frequency_of_use shows moderate drift with PSI=0.1913.
+predicted_churn_rate,,high,Predicted churn rate changed materially. Delta=0.2300.

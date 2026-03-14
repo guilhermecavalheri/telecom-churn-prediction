@@ -10,6 +10,13 @@ O projeto usa uma base de churn de telecom coletada ao longo de 12 meses e evolu
 
 ## Estrutura do Projeto
 
+Observacao sobre organizacao:
+
+- `src/` contem codigo executavel e modulos reutilizaveis do projeto.
+- `src/modules/` concentra a logica compartilhada entre treino, inferencia, API e monitoramento.
+- `artifacts/` contem apenas saidas persistidas do projeto, como modelos, logs operacionais, relatorios e graficos.
+- Portanto, `src/modules/ops_store.py` e o codigo que gerencia o banco local, enquanto `artifacts/database/ml_ops.duckdb` e o banco em si.
+
 ```text
 telecom-churn-prediction/
 |-- data/
@@ -17,24 +24,52 @@ telecom-churn-prediction/
 |   |   `-- iranian_churn_telecom.parquet   # Base original
 |   |-- trusted/
 |   |   `-- train.parquet                   # Base validada para modelagem
+|   `-- synthetic/
+|       |-- api_test_baseline.parquet       # Lote sintetico de referencia
+|       `-- api_test_drifted.parquet        # Lote sintetico com drift simulado
+|-- artifacts/
+|   |-- modeling/                           # CSVs, graficos e resumo da modelagem
+|   |-- models/
+|   |   |-- best_churn_pipeline.joblib      # Pipeline vencedor serializado
+|   |   `-- best_churn_pipeline_metadata.json
+|   |                                      # Metadata do modelo salvo
+|   |-- monitoring/
+|   |   |-- drift_summary.csv               # Snapshot de drift por feature
+|   |   |-- drift_alerts.csv                # Alertas gerados pelo monitoramento
+|   |   |-- drift_overview.png              # Ranking visual de PSI por feature
+|   |   |-- predicted_churn_rate_shift.png  # Comparacao da taxa prevista de churn
+|   |   |-- alerted_feature_distributions.png
+|   |   |                                  # Distribuicoes baseline vs drift
+|   |   `-- drift_report.json               # Resumo executivo do monitoramento
+|   `-- database/
+|       `-- ml_ops.duckdb                   # Banco local com logs operacionais
 |   `-- refined/
 |       |-- train.parquet                   # Base refinada apos limpeza
 |       `-- train_engineered.parquet        # Base com features derivadas
 |-- notebooks/
 |   |-- 01_eda_and_cleaning.ipynb           # EDA, limpeza e validacao inicial
 |   |-- 02_modeling_evaluation.ipynb        # Modelagem, feature engineering e avaliacao
-|   |-- 02_modeling_evaluation_significance_review.ipynb
-|   |                                      # Variante com leitura de significancia em correlacao
-|   `-- 03_best_model_persistence_example.ipynb
-|                                          # Exemplo de persistencia do pipeline vencedor
+|   |-- 03_drift_monitoring_demo.ipynb      # Simulacao e interpretacao de drift
+|   `-- 04_duckdb_and_api_operations_demo.ipynb
+|                                          # Consultas operacionais e chamadas da API
+|-- api/
+|   `-- app.py                              # FastAPI para scoring unitario e em lote
+|-- docs/
+|   |-- end_to_end_ml_evolution.md          # Arquitetura, plano e fluxo em Mermaid
+|   |-- operational_monitoring_reference.md # Fluxo operacional, tabelas, calculos e alertas
+|   `-- retraining_playbook.md              # Passo a passo documentado do retreinamento
 |-- src/
-|   `-- churn_modeling.py                   # Pipeline reproduzivel de treinamento e avaliacao
-|-- artifacts/
-|   |-- modeling/                           # CSVs, graficos e resumo da modelagem
-|   `-- models/
-|       |-- best_churn_pipeline.joblib      # Pipeline vencedor serializado
-|       `-- best_churn_pipeline_metadata.json
-|                                          # Metadata do modelo salvo
+|   |-- churn_modeling.py                   # Entrypoint do pipeline de treinamento e avaliacao
+|   |-- drift_demo.py                       # Entrypoint da demo de drift e monitoramento
+|   `-- modules/
+|       |-- model_io.py                     # Persistencia e carga do modelo vencedor
+|       |-- schema.py                       # Validacao de schema para inferencia
+|       |-- predict.py                      # Inferencia reutilizavel fora do notebook
+|       |-- synthetic_data.py               # Geracao de dados sinteticos baseline e drift
+|       |-- monitoring.py                   # Monitoramento e alertas de drift
+|       `-- ops_store.py                    # Persistencia operacional local em DuckDB
+|-- tests/
+|   `-- ...                                 # Testes de persistencia, inferencia, API e monitoramento
 |-- .agent/
 |   `-- skills/
 |       `-- ml-pipeline-workflow/           # Skill local para fluxos de ML guiados
@@ -56,14 +91,28 @@ telecom-churn-prediction/
    - validacao em cross-validation e holdout
    - geracao de metricas, graficos e resumo final
 
-3. `02_modeling_evaluation.ipynb`
+3. `notebooks/02_modeling_evaluation.ipynb`
    - reproducao do pipeline em formato investigativo
    - interpretacao detalhada dos graficos e resultados
    - conclusao tecnica e resumo executivo
 
-4. `03_best_model_persistence_example.ipynb`
-   - demonstracao de como salvar o melhor pipeline treinado
-   - preparo do projeto para uma evolucao mais end-to-end
+4. `notebooks/03_drift_monitoring_demo.ipynb`
+   - demonstracao detalhada do fluxo de drift
+   - interpretacao dos graficos e alertas de monitoramento
+
+5. `notebooks/04_duckdb_and_api_operations_demo.ipynb`
+   - consultas ao banco local de MLOps
+   - consumo da API e leitura dos registros operacionais
+
+6. `api/app.py`, `src/modules/predict.py` e `src/modules/ops_store.py`
+   - inferencia reutilizavel
+   - API de scoring
+   - persistencia operacional em banco local DuckDB
+
+7. `src/modules/synthetic_data.py`, `src/modules/monitoring.py` e `src/drift_demo.py`
+   - geracao de dados sinteticos
+   - simulacao de drift
+   - alerta de possivel retreinamento
 
 ## Principais Entregas
 
@@ -145,6 +194,29 @@ python src/churn_modeling.py
 
 Esse comando recria a base enriquecida e atualiza os artefatos em `artifacts/modeling/`.
 
+### API de inferencia
+
+Para subir a API localmente:
+
+```bash
+uvicorn api.app:app --reload
+```
+
+### Demo de drift
+
+Para gerar dados sinteticos baseline e driftado, registrar previsoes e produzir artefatos de monitoramento:
+
+```bash
+python src/drift_demo.py
+```
+
+Esse fluxo salva datasets em `data/synthetic/`, registra eventos em `artifacts/database/ml_ops.duckdb` e gera alertas em `artifacts/monitoring/`.
+Os principais visuais do monitoramento sao:
+
+- `drift_overview.png`: ranking de PSI por feature com severidade do drift
+- `predicted_churn_rate_shift.png`: comparacao entre a taxa prevista de churn no baseline e no cenario driftado
+- `alerted_feature_distributions.png`: distribuicoes das features com alerta para facilitar interpretacao
+
 ## Dependencias Principais
 
 - `pandas`, `numpy`: manipulacao e transformacao de dados
@@ -162,7 +234,7 @@ As evolucoes naturais do projeto sao:
 - calibracao de probabilidade do modelo vencedor
 - tuning adicional entre `XGBoost` e `LightGBM`
 - persistencia padronizada do melhor pipeline em codigo-fonte
-- modulo de inferencia dedicado, como `src/predict.py`
+- modulo de inferencia dedicado, como `src/modules/predict.py`
 - validacao de schema de entrada
 - exposicao via API, por exemplo com `FastAPI`
 - monitoramento e estrategia de retreinamento

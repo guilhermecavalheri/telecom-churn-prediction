@@ -1,5 +1,22 @@
 {
   "model_name": "XGBoost",
+  "model_version": "xgboost_2026-03-13T20:47:36+00:00",
+  "created_at_utc": "2026-03-13T20:47:36+00:00",
+  "raw_input_columns": [
+    "call_failure",
+    "complains",
+    "subscription_length",
+    "charge_amount",
+    "seconds_of_use",
+    "frequency_of_use",
+    "frequency_of_sms",
+    "distinct_called_numbers",
+    "age_group",
+    "tariff_plan",
+    "status",
+    "age",
+    "customer_value"
+  ],
   "feature_columns": [
     "call_failure",
     "complains",
@@ -33,55 +50,93 @@
   "threshold": 0.5,
   "holdout_metrics": {
     "model": "XGBoost",
-    "test_accuracy": 0.9596491228070175,
-    "test_balanced_accuracy": 0.9303067112055876,
-    "test_precision": 0.8586956521739131,
-    "test_recall": 0.8876404494382022,
-    "test_f1": 0.8729281767955801,
-    "test_roc_auc": 0.9880515779392184,
-    "test_average_precision": 0.9449914096426015
+    "test_accuracy": 0.9596,
+    "test_balanced_accuracy": 0.9303,
+    "test_precision": 0.8587,
+    "test_recall": 0.8876,
+    "test_f1": 0.8729,
+    "test_roc_auc": 0.9881,
+    "test_average_precision": 0.945
   },
-  "best_threshold_on_train_f1": 0.7531,
-  "top_features": [
-    {
-      "feature": "complains",
-      "importance": 0.0228
+  "project_summary": {
+    "dataset_rows": 2850,
+    "dataset_columns": 28,
+    "positive_rate": 0.15649122807017543,
+    "best_model": "XGBoost",
+    "best_model_holdout_metrics": {
+      "model": "XGBoost",
+      "test_accuracy": 0.9596,
+      "test_balanced_accuracy": 0.9303,
+      "test_precision": 0.8587,
+      "test_recall": 0.8876,
+      "test_f1": 0.8729,
+      "test_roc_auc": 0.9881,
+      "test_average_precision": 0.945
     },
-    {
-      "feature": "status",
-      "importance": 0.0134
+    "best_threshold_on_train_f1": 0.7531,
+    "feature_engineering_gain_vs_raw_xgboost": {
+      "roc_auc_delta": 0.0042,
+      "average_precision_delta": 0.0172,
+      "f1_delta": 0.0384
     },
-    {
-      "feature": "call_failure_rate",
-      "importance": 0.0133
-    },
-    {
-      "feature": "tenure_age_ratio",
-      "importance": 0.0109
-    },
-    {
-      "feature": "seconds_of_use",
-      "importance": 0.0101
-    },
-    {
-      "feature": "subscription_length",
-      "importance": 0.0084
-    },
-    {
-      "feature": "frequency_of_use",
-      "importance": 0.0082
-    },
-    {
-      "feature": "avg_seconds_per_call",
-      "importance": 0.008
-    },
-    {
-      "feature": "calls_per_month",
-      "importance": 0.0042
-    },
-    {
-      "feature": "usage_per_month",
-      "importance": 0.0026
+    "top_features": [
+      {
+        "feature": "complains",
+        "importance": 0.0228
+      },
+      {
+        "feature": "status",
+        "importance": 0.0134
+      },
+      {
+        "feature": "call_failure_rate",
+        "importance": 0.0133
+      },
+      {
+        "feature": "tenure_age_ratio",
+        "importance": 0.0109
+      },
+      {
+        "feature": "seconds_of_use",
+        "importance": 0.0101
+      },
+      {
+        "feature": "subscription_length",
+        "importance": 0.0084
+      },
+      {
+        "feature": "frequency_of_use",
+        "importance": 0.0082
+      },
+      {
+        "feature": "avg_seconds_per_call",
+        "importance": 0.008
+      },
+      {
+        "feature": "calls_per_month",
+        "importance": 0.0042
+      },
+      {
+        "feature": "usage_per_month",
+        "importance": 0.0026
+      }
+    ],
+    "feature_notes": {
+      "avg_seconds_per_call": "Regra de negocio: mede a intensidade media de cada ligacao. Ajuda a separar clientes que usam pouco a rede daqueles que fazem menos chamadas, mas chamadas mais longas.",
+      "sms_per_call": "Regra de negocio: compara o uso de SMS com o volume de chamadas. Ajuda a identificar perfis mais orientados a mensagem do que a voz tradicional.",
+      "calls_per_contact": "Regra de negocio: mede o quanto o cliente concentra chamadas em poucos numeros. Valores altos indicam rede de contato mais concentrada.",
+      "contact_diversity_ratio": "Regra de negocio: mede a diversidade de contatos em relacao ao volume de chamadas. Ajuda a diferenciar clientes com rede social mais ampla.",
+      "call_failure_rate": "Regra de negocio: resume a friccao operacional das chamadas. Se a taxa de falha sobe, existe sinal de experiencia ruim e maior propensao a churn.",
+      "usage_per_month": "Regra de negocio: normaliza o tempo de uso pela antiguidade do cliente. Evita superestimar clientes antigos apenas por acumularem mais consumo.",
+      "calls_per_month": "Regra de negocio: normaliza a frequencia de chamadas pelo tempo de base. Ajuda a capturar intensidade recorrente de uso.",
+      "sms_per_month": "Regra de negocio: normaliza o uso de SMS pela antiguidade. Permite comparar perfis com tempos de relacionamento diferentes.",
+      "value_per_month": "Regra de negocio: aproxima a monetizacao media mensal do cliente. Ajuda a entender valor economico recorrente.",
+      "value_per_call": "Regra de negocio: relaciona valor gerado com o volume de chamadas. Ajuda a separar clientes que geram mais valor mesmo sem alto volume.",
+      "complaint_status_interaction": "Regra de negocio: combina reclamacao com status operacional. O objetivo e capturar quando insatisfacao e contexto operacional ruim aparecem juntos.",
+      "charge_value_gap": "Regra de negocio: mede a diferenca entre cobranca nominal e valor percebido ou capturado. Pode sinalizar desalinhamento economico.",
+      "tenure_age_ratio": "Regra de negocio: relaciona tempo de base com idade do cliente. Funciona como proxy de ciclo de vida e maturidade de relacionamento.",
+      "usage_value_efficiency": "Regra de negocio: compara o quanto de uso e entregue por unidade de valor. Pode sinalizar percepcao de custo-beneficio."
     }
-  ]
+  },
+  "bundle_path": "C:\\Users\\Guilherme Cavalheri\\Desktop\\github\\telecom-churn-prediction\\artifacts\\models\\best_churn_pipeline.joblib"
 }

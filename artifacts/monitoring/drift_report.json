@@ -1,0 +1,13 @@
+{
+  "run_id": "6f705ea7-10f2-4006-9714-74be4ae02f5a",
+  "dataset_label": "synthetic_api_drift_demo",
+  "observed_at_utc": "2026-03-13T22:26:03+00:00",
+  "features_with_moderate_or_high_drift": [
+    "call_failure",
+    "subscription_length",
+    "frequency_of_use"
+  ],
+  "alert_count": 4,
+  "prediction_rate_reference": 0.18,
+  "prediction_rate_current": 0.41
+}

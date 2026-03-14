@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 import warnings
 from pathlib import Path
 
@@ -32,6 +33,12 @@ from sklearn.model_selection import StratifiedKFold, cross_validate, train_test_
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
+
+if __package__ in (None, ""):
+    sys.path.append(str(Path(__file__).resolve().parents[1]))
+
+from src.modules.model_io import save_best_model
+from src.modules.ops_store import log_model_registration
 
 matplotlib.use("Agg")
 warnings.filterwarnings(
@@ -625,6 +632,27 @@ def run_pipeline() -> dict[str, object]:
         },
         "top_features": feature_df.head(10).round(4).to_dict(orient="records"),
         "feature_notes": FEATURE_NOTES,
+    }
+
+    saved_model = save_best_model(
+        model_name=best_model_name,
+        pipeline=best_model,
+        raw_input_columns=raw_df.drop(columns=["churn"]).columns.tolist(),
+        feature_columns=X.columns.tolist(),
+        target_column="churn",
+        threshold=0.50,
+        holdout_metrics=summary["best_model_holdout_metrics"],
+        project_summary=summary,
+    )
+    log_model_registration(
+        saved_model["metadata"],
+        bundle_path=saved_model["bundle_path"],
+        metadata_path=saved_model["metadata_path"],
+    )
+    summary["model_artifacts"] = {
+        "bundle_path": str(saved_model["bundle_path"]),
+        "metadata_path": str(saved_model["metadata_path"]),
+        "model_version": saved_model["metadata"]["model_version"],
     }
 
     save_artifacts(cv_df, holdout_df, feature_df, comparison_df, threshold_df, summary)

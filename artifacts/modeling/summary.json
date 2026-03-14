@@ -76,5 +76,10 @@
     "charge_value_gap": "Regra de negocio: mede a diferenca entre cobranca nominal e valor percebido ou capturado. Pode sinalizar desalinhamento economico.",
     "tenure_age_ratio": "Regra de negocio: relaciona tempo de base com idade do cliente. Funciona como proxy de ciclo de vida e maturidade de relacionamento.",
     "usage_value_efficiency": "Regra de negocio: compara o quanto de uso e entregue por unidade de valor. Pode sinalizar percepcao de custo-beneficio."
+  },
+  "model_artifacts": {
+    "bundle_path": "C:\\Users\\Guilherme Cavalheri\\Desktop\\github\\telecom-churn-prediction\\artifacts\\models\\best_churn_pipeline.joblib",
+    "metadata_path": "C:\\Users\\Guilherme Cavalheri\\Desktop\\github\\telecom-churn-prediction\\artifacts\\models\\best_churn_pipeline_metadata.json",
+    "model_version": "xgboost_2026-03-13T20:47:36+00:00"
   }
 }
