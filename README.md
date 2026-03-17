@@ -23,8 +23,6 @@ O projeto é relevante como exemplo de ML end-to-end porque não para na modelag
 
 Desenvolver um pipeline preditivo capaz de identificar clientes com maior probabilidade de cancelamento, apoiando a priorização de ações de retenção.
 
-O projeto usa uma base de churn de telecom coletada ao longo de 12 meses e evolui o fluxo desde a análise exploratória até a persistência do melhor pipeline treinado.
-
 ## Estrutura do Projeto
 
 Observação sobre organização:
